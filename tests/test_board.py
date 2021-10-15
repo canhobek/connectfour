@@ -9,21 +9,13 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(True, False)
     """
 
-    def test_invalid_row_to_play_board(self):
-        """
-        Invalid row index to play board, expects RowIndexOutOfBounds exception
-        :return:
-        """
-        board = Board()
-        self.assertRaises(RowIsOutOfBounds, lambda: board.play(20, 4, Tile.BLUE))
-
     def test_invalid_column_to_play_board(self):
         """
         Invalid column index to play board, excepts ColumnIndexOutOfBounds exception
         :return:
         """
         board = Board()
-        self.assertRaises(ColumnIsOutOfBounds, lambda: board.play(2, 20, Tile.RED))
+        self.assertRaises(ColumnIsOutOfBounds, lambda: board.play(20, Tile.RED))
 
     def test_point_ot_play_is_full(self):
         """
@@ -31,7 +23,21 @@ class TestBoard(unittest.TestCase):
         :return:
         """
         board = Board(tile_type=Tile.BLUE)
-        self.assertRaises(PlayPointIsFull, lambda: board.play(5, 5, Tile.BLUE))
+        self.assertRaises(PlayPointIsFull, lambda: board.play(5, Tile.BLUE))
+
+
+    def test_is_win_blue_wins_horizontal(self):
+        board = Board()
+        board.play(0, Tile.BLUE)
+        board.play(0, Tile.RED)
+        board.play(1, Tile.BLUE)
+        board.play(5, Tile.RED)
+        board.play(2, Tile.BLUE)
+        board.play(1, Tile.RED)
+        board.play(3, Tile.BLUE)
+
+        self.assertTrue(board.is_win(Tile.BLUE))
+
 
     def test_get_board(self):
         board = Board()

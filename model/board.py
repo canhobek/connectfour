@@ -4,62 +4,80 @@ from exceptions.exceptions import RowIsOutOfBounds, ColumnIsOutOfBounds, PlayPoi
 
 
 class Board(AbstractBoard):
-    def __init__(self, board_x = 7, board_y = 6, tile_type=Tile.EMPTY):
-        self.x = board_x
-        self.y = board_y
+    def __init__(self, board_row = 6, board_col = 7, tile_type=Tile.EMPTY):
+        self._row = board_row
+        self._col = board_col
+        self._playable_column = [0 if tile_type == Tile.EMPTY else board_row for i in range(self._col)] # [0] * self_col
+        """
         self.matrix = []
         i = 0
         j = 0
         while i < board_y:
             self.matrix.append([])
+            j = 0
             while j < board_x:
                 self.matrix[i].append(tile_type)
                 j += 1
             i += 1
+        """
+        self._matrix = [[tile_type for _ in range(self._row)] for _ in range(self._col)]
 
     @property
     def get_row_count(self) -> int:
         """
-
-        :return:
+        return the row count of board
+        :return: int
         """
-        board = Board()
-        if(self.x != board.get_row_count):
-            raise WrongRowReturn
-        return self.x
+        return self._row
 
     @property
     def get_col_count(self) -> int:
         """
-
-        :return:
+        return the row count of board
+        :return: int
         """
-        return self.y
+        return self._col
 
-    def play(self, row: int, col: int, tile: Tile) -> None:
-        if(row < 1 or row > self.x + 1):
-            raise RowIsOutOfBounds(row)
+    def play(self, col: int, tile: Tile) -> None:
+        self._checkBounds(col)
+        if not self.is_playable(col):
+            raise PlayPointIsFull(tile)
+        #play
+        self._matrix[self._playable_column[col]][col] = tile
+        self._playable_column[col] += 1
 
-        if(col < 1 or col > self.y + 1):
+    def _checkBounds(self, col):
+        if col < 0 or col > self._col:
+            raise ColumnIsOutOfBounds(col)
+        if self._playable_column[col] > self._row:
             raise ColumnIsOutOfBounds(col)
 
-        if(self.matrix[row][col] != tile.EMPTY):
-            raise PlayPointIsFull(tile)
 
-        pass
+
     #TODO : encapsulation is fragile
     def get_board(self) -> list:
-        """for i in range(self.x):
-            for j in range(self.y):
-                print(self.matrix[i][j], end=' ')
-            print('\n')"""
-        print(self.matrix[0])
+        return self._matrix
 
-    def is_playable(self, row: int, col: int) -> bool:
-        pass
+    def is_playable(self, col: int) -> bool:
+        """
+
+        :param row:
+        :param col:
+        :return:
+        """
+        """if self._matrix[row][col] != Tile.EMPTY:
+            return False
+        else:
+            return True
+        """
+        self._checkBounds(col)
+        return self._matrix[self._playable_column[col]][col] == Tile.EMPTY
+
+
+
 
     def is_win(self, tile: Tile) -> bool:
-        pass
+        return True
 
     def is_empty(self) -> bool:
         pass

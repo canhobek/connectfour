@@ -11,7 +11,7 @@ class AbstractBoard(ABC):
         raise NotImplementedError("get col count must be imlpemented")
 
     @abstractmethod
-    def play(self, row:int, col:int, tile:Tile)->None:
+    def play(self, col:int, tile:Tile)->None:
         raise NotImplementedError("play method must be implemented")
 
     @abstractmethod
@@ -19,7 +19,7 @@ class AbstractBoard(ABC):
         raise NotImplementedError("get method must be implemented")
 
     @abstractmethod
-    def is_playable(self, row:int, col:int)->bool:
+    def is_playable(self, col:int)->bool:
         raise NotImplementedError("is playable must be implemented")
 
     @abstractmethod
