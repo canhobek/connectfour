@@ -1,6 +1,7 @@
 from model.tile import Tile
 from model.abstract_board import AbstractBoard
 from exceptions.exceptions import RowIsOutOfBounds, ColumnIsOutOfBounds, PlayPointIsFull, WrongRowReturn
+from model.board_model_listener import BoardModelListener
 
 
 class Board(AbstractBoard):
@@ -8,6 +9,9 @@ class Board(AbstractBoard):
         self._row = board_row
         self._col = board_col
         self._playable_column = [0 if tile_type == Tile.EMPTY else board_row for i in range(self._col)] # [0] * self_col
+        self._subscribeList = []
+        self.current_row = 0
+
         """
         self.matrix = []
         i = 0
@@ -45,6 +49,7 @@ class Board(AbstractBoard):
         #play
         self._matrix[self._playable_column[col]][col] = tile
         self._playable_column[col] += 1
+        self.notify()
 
     def _checkBounds(self, col):
         if col < 0 or col > self._col:
@@ -55,8 +60,8 @@ class Board(AbstractBoard):
 
 
     #TODO : encapsulation is fragile
-    def get_board(self) -> list:
-        return self._matrix
+    #def get_board(self) -> list:
+    #    return self._matrix
 
     def is_playable(self, col: int) -> bool:
         """
@@ -81,6 +86,35 @@ class Board(AbstractBoard):
 
     def is_empty(self) -> bool:
         pass
+
+
+    def addListener(self, listener: BoardModelListener):
+        """
+        adding listeners to subscirber list
+        :param listener:
+        :return:
+        """
+        self._subscribeList.append(listener)
+
+    def notify(self):
+        """
+        notifiyng subscribers
+        :return:
+        """
+        [modellistener.board_changed() for modellistener in self._subscribeList]
+
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current_row == self.get_row_count:
+            self.current_row = 0
+            raise StopIteration()
+        row = self._matrix[self.current_row]
+        self.current_row += 1
+        return row
+
 
 
 

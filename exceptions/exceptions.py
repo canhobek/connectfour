@@ -11,6 +11,9 @@ class PlayPointIsFull(Exception):
     def __init__(self, tile_type):
         super(PlayPointIsFull, self).__init__(f"{tile_type} is already played there.")
 
+class GameAbortedException(Exception):
+    def __init__(self, player):
+        super(GameAbortedException, self).__init__(f"{player} aborted the game. ")
 
 
 
