@@ -1,0 +1,69 @@
+from model.board_model_listener import BoardModelListener
+from model.board import Board
+from model.player import Player
+from typing import List
+from view.console_view_listener import ConsoleViewListener
+from model.player import CircularPlayerIterator
+from exceptions.exceptions import GameAbortedException
+
+#from controller.console_controller import ConsoleController
+
+class ConsoleView(BoardModelListener):
+    def __init__(self, board: Board, *players: List[Player]):
+        self._board = board
+        self._board.addListener(self)
+        self._subscribeList = []
+        self._player_iter = CircularPlayerIterator(players)
+
+
+    def display_board(self):
+        #[[print(item) for item in row] for row in self._board]
+        # TODO: make board class iterable
+        for row in self._board:
+            for item in row:
+                print(item, end=" ")
+            print()
+
+    def get_console_input(self, player):
+        try :
+            column = int(input(f"{player} please enter col to play [-1 aborts game]"))
+            if column == -1:
+                raise GameAbortedException(player)
+            column -= 1
+            self.notify(column, player)
+        except ValueError:
+            print("Invalid column number")
+            return False
+        except Exception as ce:
+            print(ce)
+            return False
+
+        return True
+
+
+    def main_loop(self):
+        self.display_board()
+        for current_player in self._player_iter:
+            try:
+                while not self.get_console_input(current_player):
+                    pass
+
+            except GameAbortedException as ge:
+                print(ge)
+                break
+
+            #TODO: game end break
+            if self._board.is_win(current_player.tile):
+                print(current_player, "wins")
+                break
+
+
+
+    def add_listener(self, listener: ConsoleViewListener):
+        self._subscribeList.append(listener)
+
+    def notify(self, col: int, player: Player):
+        [i.input_recieved(col, player) for i in self._subscribeList]
+
+    def board_changed(self):
+        self.display_board()
