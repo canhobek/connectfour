@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
+
 from model.tile import Tile
+
 
 class AbstractBoard(ABC):
     @abstractmethod
-    def get_row_count(self)->int:
+    def row_count(self)->int:
         raise NotImplementedError("get row count must be imlpemented")
 
     @abstractmethod
-    def get_col_count(self)->int:
+    def column_count(self)->int:
         raise NotImplementedError("get col count must be imlpemented")
 
     @abstractmethod
@@ -27,6 +29,6 @@ class AbstractBoard(ABC):
         raise NotImplementedError("is win must be implemented")
 
     @abstractmethod
-    def is_empty(self)->bool:
+    def is_full(self)->bool:
         raise NotImplementedError("is empty must be implemented")
 
