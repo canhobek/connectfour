@@ -1,7 +1,9 @@
 import unittest
+
+from exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
 from model.board import Board
 from model.tile import Tile
-from exceptions.exceptions import RowIsOutOfBounds, ColumnIsOutOfBounds, PlayPointIsFull, WrongRowReturn
+
 
 class TestBoard(unittest.TestCase):
     """

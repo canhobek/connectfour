@@ -1,33 +1,20 @@
-from model.tile import Tile
+from exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
 from model.abstract_board import AbstractBoard
-from exceptions.exceptions import RowIsOutOfBounds, ColumnIsOutOfBounds, PlayPointIsFull, WrongRowReturn
 from model.board_model_listener import BoardModelListener
+from model.tile import Tile
 
 
 class Board(AbstractBoard):
-    def __init__(self, board_row = 6, board_col = 7, tile_type=Tile.EMPTY):
+    def __init__(self, board_row=6, board_col=7, tile_type=Tile.EMPTY):
         self._row = board_row
         self._col = board_col
-        self._playable_column = [0 if tile_type == Tile.EMPTY else board_row for i in range(self._col)] # [0] * self_col
-        self._subscribeList = []
-        self.current_row = 0
-
-        """
-        self.matrix = []
-        i = 0
-        j = 0
-        while i < board_y:
-            self.matrix.append([])
-            j = 0
-            while j < board_x:
-                self.matrix[i].append(tile_type)
-                j += 1
-            i += 1
-        """
-        self._matrix = [[tile_type for _ in range(self._row)] for _ in range(self._col)]
+        self.__playable_column = [0] * self._col
+        self.__subscribeList = []
+        self.__current_row = 0
+        self._board = [[tile_type for _ in range(self._row)] for _ in range(self._col)]
 
     @property
-    def get_row_count(self) -> int:
+    def row_count(self) -> int:
         """
         return the row count of board
         :return: int
@@ -35,7 +22,7 @@ class Board(AbstractBoard):
         return self._row
 
     @property
-    def get_col_count(self) -> int:
+    def column_count(self) -> int:
         """
         return the row count of board
         :return: int
@@ -46,47 +33,75 @@ class Board(AbstractBoard):
         self._checkBounds(col)
         if not self.is_playable(col):
             raise PlayPointIsFull(tile)
-        #play
-        self._matrix[self._playable_column[col]][col] = tile
-        self._playable_column[col] += 1
+        # play
+        self._board[self.__playable_column[col]][col] = tile
+        self.__playable_column[col] += 1
         self.notify()
 
     def _checkBounds(self, col):
         if col < 0 or col > self._col:
             raise ColumnIsOutOfBounds(col)
-        if self._playable_column[col] > self._row:
+        if self.__playable_column[col] > self._row:
             raise ColumnIsOutOfBounds(col)
-
-
-
-    #TODO : encapsulation is fragile
-    #def get_board(self) -> list:
-    #    return self._matrix
 
     def is_playable(self, col: int) -> bool:
         """
-
-        :param row:
         :param col:
         :return:
         """
-        """if self._matrix[row][col] != Tile.EMPTY:
-            return False
-        else:
-            return True
-        """
         self._checkBounds(col)
-        return self._matrix[self._playable_column[col]][col] == Tile.EMPTY
-
-
-
+        return self._board[self.__playable_column[col]][col] == Tile.EMPTY
 
     def is_win(self, tile: Tile) -> bool:
+        def rows():
+            for r in range(self.row_count):
+                for c in range(self.column_count - 3):
+                    if self._board[r][c] == tile.value and \
+                            self._board[r][c + 1] == tile.value and \
+                            self._board[r][c + 2] == tile.value and \
+                            self._board[r][c + 3] == tile.value:
+                        return True
+            return False
+
+        def cols():
+            for c in range(self.column_count):
+                for r in range(self.row_count - 3):
+                    if self._board[r][c] == tile.value and \
+                            self._board[r + 1][c] == tile.value and \
+                            self._board[r + 2][c] == tile.value and \
+                            self._board[r + 3][c] == tile.value:
+                        return True
+            return False
+
+        def diagonal():
+            # Check positively sloped diaganols
+            for c in range(self.column_count - 3):
+                for r in range(self.row_count - 3):
+                    if self._board[r][c] == tile.value and \
+                            self._board[r + 1][c + 1] == tile.value and \
+                            self._board[r + 2][c + 2] == tile.value and \
+                            self._board[r + 3][c + 3] == tile.value:
+                        return True
+            return False
+
+        def antiDiagonal():
+            # Check negatively sloped diaganols
+            for c in range(self.column_count - 3):
+                for r in range(3, self.row_count):
+                    if self._board[r][c] == tile.value and \
+                            self._board[r - 1][c + 1] == tile.value and \
+                            self._board[r - 2][c + 2] == tile.value and \
+                            self._board[r - 3][c + 3] == tile.value:
+                        return True
+            return False
+
+        return rows() or cols() or diagonal() or antiDiagonal()
+
+    def is_full(self) -> bool:
+        for row in self._board:
+            if row.count(Tile.EMPTY.value) > 0:
+                return False
         return True
-
-    def is_empty(self) -> bool:
-        pass
-
 
     def addListener(self, listener: BoardModelListener):
         """
@@ -94,28 +109,22 @@ class Board(AbstractBoard):
         :param listener:
         :return:
         """
-        self._subscribeList.append(listener)
+        self.__subscribeList.append(listener)
 
     def notify(self):
         """
         notifiyng subscribers
         :return:
         """
-        [modellistener.board_changed() for modellistener in self._subscribeList]
-
+        [modellistener.board_changed() for modellistener in self.__subscribeList]
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self.current_row == self.get_row_count:
-            self.current_row = 0
+        if self.__current_row == self.row_count:
+            self.__current_row = 0
             raise StopIteration()
-        row = self._matrix[self.current_row]
-        self.current_row += 1
+        row = self._board[self.__current_row]
+        self.__current_row += 1
         return row
-
-
-
-
-

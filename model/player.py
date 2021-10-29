@@ -7,7 +7,7 @@ class Player:
         self._tile = tile
 
     @property
-    def name (self):
+    def name(self):
         return self._name
 
     @property
@@ -17,13 +17,15 @@ class Player:
     def __str__(self):
         return f"{self._name} is player with tile {self._tile}."
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class CircularPlayerIterator:
     def __init__(self, player_data):
         self._data = player_data
         self._current = 0
         self._data_size = len(player_data)
-
 
     def __iter__(self):
         return self

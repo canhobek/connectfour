@@ -1,12 +1,14 @@
-from model.board_model_listener import BoardModelListener
-from model.board import Board
-from model.player import Player
 from typing import List
-from view.console_view_listener import ConsoleViewListener
-from model.player import CircularPlayerIterator
-from exceptions.exceptions import GameAbortedException
 
-#from controller.console_controller import ConsoleController
+from exceptions.exceptions import GameAbortedException
+from model.board import Board
+from model.board_model_listener import BoardModelListener
+from model.player import CircularPlayerIterator
+from model.player import Player
+from view.console.console_view_listener import ConsoleViewListener
+
+
+# from controller.console_controller import ConsoleController
 
 class ConsoleView(BoardModelListener):
     def __init__(self, board: Board, *players: List[Player]):
@@ -15,17 +17,21 @@ class ConsoleView(BoardModelListener):
         self._subscribeList = []
         self._player_iter = CircularPlayerIterator(players)
 
+    @property
+    def board(self):
+        return self._board
 
-    def display_board(self):
-        #[[print(item) for item in row] for row in self._board]
-        # TODO: make board class iterable
-        for row in self._board:
+    def display_board(self) -> None:
+        print()
+        for row in self.board:
+            print(end="|")
             for item in row:
-                print(item, end=" ")
+                print(item, end="|")
             print()
+        print("_" * int(self.board.row_count * 2 + 1))
 
     def get_console_input(self, player):
-        try :
+        try:
             column = int(input(f"{player} please enter col to play [-1 aborts game]"))
             if column == -1:
                 raise GameAbortedException(player)
@@ -40,7 +46,6 @@ class ConsoleView(BoardModelListener):
 
         return True
 
-
     def main_loop(self):
         self.display_board()
         for current_player in self._player_iter:
@@ -52,18 +57,26 @@ class ConsoleView(BoardModelListener):
                 print(ge)
                 break
 
-            #TODO: game end break
-            if self._board.is_win(current_player.tile):
+            # TODO: game end break
+            if self.__isGameEnd(current_player):
                 print(current_player, "wins")
                 break
 
-
+    def __isGameEnd(self, currentPlayer):
+        if self.__model.isConnectFour(currentPlayer.tile):
+            print(f"{currentPlayer.name} wins")
+            currentPlayer.score += 1
+            return True
+        if self.__model.isBoardFull():
+            print("TIE")
+            return True
+        return False
 
     def add_listener(self, listener: ConsoleViewListener):
         self._subscribeList.append(listener)
 
     def notify(self, col: int, player: Player):
-        [i.input_recieved(col, player) for i in self._subscribeList]
+        [i.input_received(col, player) for i in self._subscribeList]
 
     def board_changed(self):
         self.display_board()
