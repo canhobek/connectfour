@@ -11,7 +11,7 @@ from view.console.console_view_listener import ConsoleViewListener
 # from controller.console_controller import ConsoleController
 
 class ConsoleView(BoardModelListener):
-    def __init__(self, board: Board, *players: List[Player]):
+    def __init__(self, board: Board, players: List[Player]):
         self._board = board
         self._board.addListener(self)
         self._subscribeList = []
