@@ -63,11 +63,11 @@ class ConsoleView(BoardModelListener):
                 break
 
     def __isGameEnd(self, currentPlayer):
-        if self.__model.isConnectFour(currentPlayer.tile):
+        if self._board.is_win(currentPlayer)[0]:
             print(f"{currentPlayer.name} wins")
             currentPlayer.score += 1
             return True
-        if self.__model.isBoardFull():
+        if self._board.is_full():
             print("TIE")
             return True
         return False

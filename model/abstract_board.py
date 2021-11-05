@@ -1,9 +1,14 @@
 from abc import ABC, abstractmethod
 
 from model.tile import Tile
-
+from model.player import Player
+from typing import Tuple
 
 class AbstractBoard(ABC):
+    @abstractmethod
+    def get_board(self):
+        pass
+
     @abstractmethod
     def row_count(self)->int:
         raise NotImplementedError("get row count must be imlpemented")
@@ -25,7 +30,7 @@ class AbstractBoard(ABC):
         raise NotImplementedError("is playable must be implemented")
 
     @abstractmethod
-    def is_win(self, tile:Tile)->bool:
+    def is_win(self, player:Player)->Tuple[bool, Player]:
         raise NotImplementedError("is win must be implemented")
 
     @abstractmethod

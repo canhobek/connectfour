@@ -3,4 +3,4 @@ setuptools==57.0.0
 wheel==0.36.2
 PyQt5==5.15.5
 PyQt5-stubs==5.15.2.0
-Flask:2.0.1
+Flask==2.0.1

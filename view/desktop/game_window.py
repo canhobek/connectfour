@@ -47,7 +47,6 @@ class GameWindow(QMainWindow, BoardModelListener):
         r = 0
         for row in self._board:
             c = 0
-
             for elem in row:
                 if elem == Tile.EMPTY:
                     c += GameWindow.COL_WIDTH
@@ -70,3 +69,8 @@ class GameWindow(QMainWindow, BoardModelListener):
         """
         print("board changed")
         self.update()  # trigger paintEvent
+
+        #TODO check game conditions to win or tie
+
+        #QMessageBox göster game restle
+
