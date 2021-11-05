@@ -11,12 +11,11 @@ from view.console.console_view import ConsoleView
 from view.desktop.game_window import GameWindow
 
 
-
 # TODO: add application factory pattern to implement different application
 class Application:
     def __init__(self):
         self._board = Board()
-        self._players = [Player("Can", Tile.BLUE), Player("Onur", Tile.RED)]
+        self._players = [Player("Deniz", Tile.BLUE), Player("Onur", Tile.RED)]
 
     def create_console_application(self):
         console_view = ConsoleView(self._board, self._players)
@@ -34,15 +33,13 @@ class Application:
         # Start the event loop.
         app.exec()
 
-    def creat_web_application(self):
+    def create_web_application(self):
         web_view = WebView(self._board, self._players)
         web_view.run()
 
 
-
 if __name__ == '__main__':
     app = Application()
-    app.create_console_application()
+    #app.create_console_application()
     #app.create_desktop_application()
-    #app.creat_web_application()
-
+    app.create_web_application()
