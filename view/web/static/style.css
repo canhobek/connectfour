@@ -1,10 +1,3 @@
-td {
-    width:60px;
-    height:60px;
-}
-
-
-
 game-board-div button {
     cursor: pointer;  
     border: none; 
@@ -16,16 +9,28 @@ div.empty {
     background-image: url("./img/empty_tile.png");
     background-repeat: no-repeat;
     background-color: #fff;
+    height: 90px;
+    width: 90px;
+    display: block;
+    background-size: 90px 90px;
 }
 
 div.red {
     background-image: url("./img/red_tile.png");
     background-repeat: no-repeat;
     background-color: #fff;
+    height: 90px;
+    width: 90px;
+    display: block;
+    background-size: 90px 90px;
 }
 
 div.blue {
     background-image: url("./img/blue_tile.png");
     background-repeat: no-repeat;
     background-color: #fff;
+    height: 90px;
+    width: 90px;
+    display: block;
+    background-size: 90px 90px;
 }
