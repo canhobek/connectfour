@@ -1,0 +1,37 @@
+{% extends 'base_view.html' %}
+
+
+{% block board_view %}
+
+<div class="container">
+    <div id="game-board-div" class="table-responsive">
+          <table class="table table-bordered border-primary align-middle">
+            {% for row in board %}
+              <tr >
+                  {% for row_item in row %}
+                    <td>
+                        dasdasd
+                        {%if row_item.value == 1 %}
+                            <div data-col="{{loop.index}}" class="empty" ></div>
+                        {% elif row_item.value == 2 %}
+                             <div data-col="{{loop.index}}" class="red" ></div>
+                        {% elif row_item.value == 3 %}
+                            <div data-col="{{loop.index}}" class="blue" ></div>
+                        {% endif %}
+
+                    </td>
+                  {% endfor %}
+              </tr>
+              {% endfor %}
+              <tr>
+                  {% for c in range(board[0]|length) %}
+
+                    <td id="buttons"><button data-col={{c}}>Play{{c + 1}}</button></td>
+                  {% endfor %}
+              </tr>
+
+          </table>
+    </div>
+</div>
+
+{% endblock %}
