@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QSize, Qt, QRect
 from PyQt5.QtGui import QPaintEvent, QMouseEvent, QPainter, QColor
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 from model.board_model_listener import BoardModelListener
 from controller.desktop.mouse_controller import MouseController
@@ -23,6 +23,7 @@ class GameWindow(QMainWindow, BoardModelListener):
         self._board.addListener(self)
 
         self._player_iter = CircularPlayerIterator(players)
+        self._current_player = None
 
         self.mouseController = MouseController(board, self)
 
@@ -36,7 +37,8 @@ class GameWindow(QMainWindow, BoardModelListener):
 
     def mouseDoubleClickEvent(self, mouseEvent: QMouseEvent) -> None:
         if mouseEvent.button() == Qt.LeftButton:
-            self.mouseController.mouseDoubleClickEvent(mouseEvent, next(self._player_iter).tile)
+            self._current_player =  next(self._player_iter);
+            self.mouseController.mouseDoubleClickEvent(mouseEvent, self._current_player.tile)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
@@ -67,10 +69,18 @@ class GameWindow(QMainWindow, BoardModelListener):
         """
         abstract method imp. model listener
         """
-        print("board changed")
+        game_status, msg = self.__isGameEnd(self._current_player)
+        if game_status:
+            QMessageBox.information(self, "Game Over", msg)
+
         self.update()  # trigger paintEvent
 
-        #TODO check game conditions to win or tie
 
-        #QMessageBox göster game restle
 
+    def __isGameEnd(self, currentPlayer):
+        if self._board.is_win(currentPlayer):
+            currentPlayer.score += 1
+            return True, f"{currentPlayer.name} wins"
+        if self._board.is_full():
+            return True, f"Board is full - TIE"
+        return False, ""
