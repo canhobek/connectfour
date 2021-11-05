@@ -3,11 +3,13 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from controller.console.console_controller import ConsoleController
+from controller.web.web_controller import WebView
 from model.board import Board
 from model.player import Player
 from model.tile import Tile
 from view.console.console_view import ConsoleView
 from view.desktop.game_window import GameWindow
+
 
 
 # TODO: add application factory pattern to implement different application
@@ -32,8 +34,15 @@ class Application:
         # Start the event loop.
         app.exec()
 
+    def creat_web_application(self):
+        web_view = WebView(self._board, self._players)
+        web_view.run()
+
+
 
 if __name__ == '__main__':
     app = Application()
     #app.create_console_application()
-    app.create_desktop_application()
+    #app.create_desktop_application()
+    app.creat_web_application()
+
