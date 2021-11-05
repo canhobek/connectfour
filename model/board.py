@@ -14,7 +14,7 @@ class Board(AbstractBoard):
         self.__playable_column = [0] * self._col
         self.__subscribeList = []
         self.__current_row = 0
-        self._board = [[tile_type for _ in range(self._row)] for _ in range(self._col)]
+        self._board = [[tile_type for _ in range(self._col)] for _ in range(self._row)]
 
     def get_board(self):
         return self._board
