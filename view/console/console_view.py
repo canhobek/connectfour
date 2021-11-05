@@ -5,6 +5,7 @@ from model.board import Board
 from model.board_model_listener import BoardModelListener
 from model.player import CircularPlayerIterator
 from model.player import Player
+from model.tile import Tile
 from view.console.console_view_listener import ConsoleViewListener
 
 
@@ -23,10 +24,10 @@ class ConsoleView(BoardModelListener):
 
     def display_board(self) -> None:
         print()
-        for row in self.board:
+        for row in reversed(self.board.get_board()):
             print(end="|")
             for item in row:
-                print(item, end="|")
+                print(item.get_display_str(), end="|")
             print()
         print("_" * int(self.board.row_count * 2 + 1))
 
@@ -63,7 +64,7 @@ class ConsoleView(BoardModelListener):
                 break
 
     def __isGameEnd(self, currentPlayer):
-        if self._board.is_win(currentPlayer)[0]:
+        if self._board.is_win(currentPlayer):
             print(f"{currentPlayer.name} wins")
             currentPlayer.score += 1
             return True
