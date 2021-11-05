@@ -33,11 +33,14 @@ class GameWindow(QMainWindow, BoardModelListener):
         for x in range(GameWindow.COL_WIDTH, GameWindow.WIDTH, GameWindow.COL_WIDTH):
             painter.drawLine(x, 0, x, GameWindow.HEIGHT)
 
+        for x in range(GameWindow.COL_WIDTH, GameWindow.HEIGHT, GameWindow.COL_WIDTH):
+            painter.drawLine(0, x, GameWindow.WIDTH, x)
+
         self._draw_board(painter)
 
     def mouseDoubleClickEvent(self, mouseEvent: QMouseEvent) -> None:
         if mouseEvent.button() == Qt.LeftButton:
-            self._current_player =  next(self._player_iter);
+            self._current_player = next(self._player_iter);
             self.mouseController.mouseDoubleClickEvent(mouseEvent, self._current_player.tile)
 
     def mousePressEvent(self, event):
@@ -72,10 +75,8 @@ class GameWindow(QMainWindow, BoardModelListener):
         game_status, msg = self.__isGameEnd(self._current_player)
         if game_status:
             QMessageBox.information(self, "Game Over", msg)
-
+            self.setDisabled(True) # prevent to play after game ands
         self.update()  # trigger paintEvent
-
-
 
     def __isGameEnd(self, currentPlayer):
         if self._board.is_win(currentPlayer):

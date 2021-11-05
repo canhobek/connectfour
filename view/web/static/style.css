@@ -1,9 +1,13 @@
-game-board-div button {
-    cursor: pointer;  
-    border: none; 
-    color: #333;
+button {
+    cursor: pointer;
+    background-color: #ffd400;
+    width:105px;
+
 }
 
+table {
+    width:740px!important;
+}
 
 div.empty {
     background-image: url("./img/empty_tile.png");

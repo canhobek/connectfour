@@ -1,10 +1,8 @@
-from exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
+from model.exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
 from model.abstract_board import AbstractBoard
 from model.board_model_listener import BoardModelListener
 from model.tile import Tile
 from model.player import Player
-
-from typing import Tuple
 
 
 class Board(AbstractBoard):
@@ -58,8 +56,9 @@ class Board(AbstractBoard):
         self._checkBounds(col)
         return self._board[self.__playable_column[col]][col] == Tile.EMPTY
 
-    def is_win(self, player: Player) ->bool:
+    def is_win(self, player: Player) -> bool:
         tile = player.tile
+
         def rows():
             for r in range(self.row_count):
                 for c in range(self.column_count - 3):

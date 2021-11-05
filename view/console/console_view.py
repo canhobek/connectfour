@@ -1,15 +1,12 @@
 from typing import List
 
-from exceptions.exceptions import GameAbortedException
+from model.exceptions.exceptions import GameAbortedException
 from model.board import Board
 from model.board_model_listener import BoardModelListener
 from model.player import CircularPlayerIterator
 from model.player import Player
-from model.tile import Tile
 from view.console.console_view_listener import ConsoleViewListener
 
-
-# from controller.console_controller import ConsoleController
 
 class ConsoleView(BoardModelListener):
     def __init__(self, board: Board, players: List[Player]):

@@ -1,6 +1,6 @@
 import unittest
 
-from exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
+from model.exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
 from model.board import Board
 from model.tile import Tile
 from model.player import Player

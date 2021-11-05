@@ -1,4 +1,4 @@
-from exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
+from model.exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
 from model.board import Board
 from model.player import Player
 from view.console.console_view import ConsoleView
