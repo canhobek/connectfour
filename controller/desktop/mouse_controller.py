@@ -1,5 +1,3 @@
-from PyQt5.QtCore import QPoint
-
 from model.board import Board
 from PyQt5.QtGui import QMouseEvent
 
@@ -10,7 +8,6 @@ class MouseController:
         self._view = view
 
     def mouseDoubleClickEvent(self, mouseEvent: QMouseEvent, tile) -> None:
-        print(mouseEvent.pos())
         currentPos = mouseEvent.pos()
         col = currentPos.x() // 100
         print(col)

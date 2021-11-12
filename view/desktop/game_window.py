@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QSize, Qt, QRect
-from PyQt5.QtGui import QPaintEvent, QMouseEvent, QPainter, QColor
+from PyQt5.QtGui import QPaintEvent, QMouseEvent, QPainter, QColor, QBrush
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 from model.board_model_listener import BoardModelListener
@@ -61,6 +61,7 @@ class GameWindow(QMainWindow, BoardModelListener):
                     painter.setBrush(QColor(183, 0, 0))
                 elif elem == Tile.BLUE:
                     painter.setBrush(QColor(0, 0, 160))
+                    #painter.setBrush(QBrush(QColor(0, 0, 160), Qt.LinearGradientPattern))
 
                 painter.drawEllipse(QRect(c, GameWindow.HEIGHT - GameWindow.TILE_DIAMETER + r,
                                           GameWindow.TILE_DIAMETER, GameWindow.TILE_DIAMETER))

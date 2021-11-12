@@ -41,5 +41,5 @@ class Application:
 if __name__ == '__main__':
     app = Application()
     #app.create_console_application()
-    #app.create_desktop_application()
-    app.create_web_application()
+    app.create_desktop_application()
+    #app.create_web_application()

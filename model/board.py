@@ -124,6 +124,9 @@ class Board(AbstractBoard):
         """
         [model_listener.board_changed() for model_listener in self.__subscribeList]
 
+    def __reversed__(self):
+        raise NotImplementedError("Reverse method not implemented yet")
+
     def __iter__(self):
         return self
 
