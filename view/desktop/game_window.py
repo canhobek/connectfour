@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QSize, Qt, QRect
-from PyQt5.QtGui import QPaintEvent, QMouseEvent, QPainter, QColor
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtGui import QPaintEvent, QMouseEvent, QPainter, QColor, QBrush
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 from model.board_model_listener import BoardModelListener
 from controller.desktop.mouse_controller import MouseController
@@ -23,6 +23,7 @@ class GameWindow(QMainWindow, BoardModelListener):
         self._board.addListener(self)
 
         self._player_iter = CircularPlayerIterator(players)
+        self._current_player = None
 
         self.mouseController = MouseController(board, self)
 
@@ -32,11 +33,15 @@ class GameWindow(QMainWindow, BoardModelListener):
         for x in range(GameWindow.COL_WIDTH, GameWindow.WIDTH, GameWindow.COL_WIDTH):
             painter.drawLine(x, 0, x, GameWindow.HEIGHT)
 
+        for x in range(GameWindow.COL_WIDTH, GameWindow.HEIGHT, GameWindow.COL_WIDTH):
+            painter.drawLine(0, x, GameWindow.WIDTH, x)
+
         self._draw_board(painter)
 
     def mouseDoubleClickEvent(self, mouseEvent: QMouseEvent) -> None:
         if mouseEvent.button() == Qt.LeftButton:
-            self.mouseController.mouseDoubleClickEvent(mouseEvent, next(self._player_iter).tile)
+            self._current_player = next(self._player_iter);
+            self.mouseController.mouseDoubleClickEvent(mouseEvent, self._current_player.tile)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
@@ -56,6 +61,7 @@ class GameWindow(QMainWindow, BoardModelListener):
                     painter.setBrush(QColor(183, 0, 0))
                 elif elem == Tile.BLUE:
                     painter.setBrush(QColor(0, 0, 160))
+                    #painter.setBrush(QBrush(QColor(0, 0, 160), Qt.LinearGradientPattern))
 
                 painter.drawEllipse(QRect(c, GameWindow.HEIGHT - GameWindow.TILE_DIAMETER + r,
                                           GameWindow.TILE_DIAMETER, GameWindow.TILE_DIAMETER))
@@ -67,10 +73,16 @@ class GameWindow(QMainWindow, BoardModelListener):
         """
         abstract method imp. model listener
         """
-        print("board changed")
+        game_status, msg = self.__isGameEnd(self._current_player)
+        if game_status:
+            QMessageBox.information(self, "Game Over", msg)
+            self.setDisabled(True) # prevent to play after game ands
         self.update()  # trigger paintEvent
 
-        #TODO check game conditions to win or tie
-
-        #QMessageBox göster game restle
-
+    def __isGameEnd(self, currentPlayer):
+        if self._board.is_win(currentPlayer):
+            currentPlayer.score += 1
+            return True, f"{currentPlayer.name} wins"
+        if self._board.is_full():
+            return True, f"Board is full - TIE"
+        return False, ""

@@ -4,19 +4,18 @@
 {% block board_view %}
 
 <div class="container">
-    <div id="game-board-div" class="table-responsive">
+    <div id="game-board-div" class="table-responsive-sm">
           <table class="table table-bordered border-primary align-middle">
             {% for row in board %}
               <tr >
                   {% for row_item in row %}
                     <td>
-                        dasdasd
                         {%if row_item.value == 1 %}
-                            <div data-col="{{loop.index}}" class="empty" ></div>
+                            <div class="empty" ></div>
                         {% elif row_item.value == 2 %}
-                             <div data-col="{{loop.index}}" class="red" ></div>
+                             <div class="red" ></div>
                         {% elif row_item.value == 3 %}
-                            <div data-col="{{loop.index}}" class="blue" ></div>
+                            <div class="blue" ></div>
                         {% endif %}
 
                     </td>

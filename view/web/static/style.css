@@ -1,31 +1,40 @@
-td {
-    width:60px;
-    height:60px;
+button {
+    cursor: pointer;
+    background-color: #ffd400;
+    width:105px;
+
 }
 
-
-
-game-board-div button {
-    cursor: pointer;  
-    border: none; 
-    color: #333;
+table {
+    width:740px!important;
 }
-
 
 div.empty {
     background-image: url("./img/empty_tile.png");
     background-repeat: no-repeat;
     background-color: #fff;
+    height: 90px;
+    width: 90px;
+    display: block;
+    background-size: 90px 90px;
 }
 
 div.red {
     background-image: url("./img/red_tile.png");
     background-repeat: no-repeat;
     background-color: #fff;
+    height: 90px;
+    width: 90px;
+    display: block;
+    background-size: 90px 90px;
 }
 
 div.blue {
     background-image: url("./img/blue_tile.png");
     background-repeat: no-repeat;
     background-color: #fff;
+    height: 90px;
+    width: 90px;
+    display: block;
+    background-size: 90px 90px;
 }

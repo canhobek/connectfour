@@ -1,10 +1,8 @@
-from exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
+from model.exceptions.exceptions import ColumnIsOutOfBounds, PlayPointIsFull
 from model.abstract_board import AbstractBoard
 from model.board_model_listener import BoardModelListener
 from model.tile import Tile
 from model.player import Player
-
-from typing import Tuple
 
 
 class Board(AbstractBoard):
@@ -14,7 +12,7 @@ class Board(AbstractBoard):
         self.__playable_column = [0] * self._col
         self.__subscribeList = []
         self.__current_row = 0
-        self._board = [[tile_type for _ in range(self._row)] for _ in range(self._col)]
+        self._board = [[tile_type for _ in range(self._col)] for _ in range(self._row)]
 
     def get_board(self):
         return self._board
@@ -58,25 +56,26 @@ class Board(AbstractBoard):
         self._checkBounds(col)
         return self._board[self.__playable_column[col]][col] == Tile.EMPTY
 
-    def is_win(self, player: Player) -> Tuple[bool, Player]:
+    def is_win(self, player: Player) -> bool:
         tile = player.tile
+
         def rows():
             for r in range(self.row_count):
                 for c in range(self.column_count - 3):
-                    if self._board[r][c] == tile.value and \
-                            self._board[r][c + 1] == tile.value and \
-                            self._board[r][c + 2] == tile.value and \
-                            self._board[r][c + 3] == tile.value:
+                    if self._board[r][c] == tile and \
+                            self._board[r][c + 1] == tile and \
+                            self._board[r][c + 2] == tile and \
+                            self._board[r][c + 3] == tile:
                         return True
             return False
 
         def cols():
             for c in range(self.column_count):
                 for r in range(self.row_count - 3):
-                    if self._board[r][c] == tile.value and \
-                            self._board[r + 1][c] == tile.value and \
-                            self._board[r + 2][c] == tile.value and \
-                            self._board[r + 3][c] == tile.value:
+                    if self._board[r][c] == tile and \
+                            self._board[r + 1][c] == tile and \
+                            self._board[r + 2][c] == tile and \
+                            self._board[r + 3][c] == tile:
                         return True
             return False
 
@@ -84,10 +83,10 @@ class Board(AbstractBoard):
             # Check positively sloped diaganols
             for c in range(self.column_count - 3):
                 for r in range(self.row_count - 3):
-                    if self._board[r][c] == tile.value and \
-                            self._board[r + 1][c + 1] == tile.value and \
-                            self._board[r + 2][c + 2] == tile.value and \
-                            self._board[r + 3][c + 3] == tile.value:
+                    if self._board[r][c] == tile and \
+                            self._board[r + 1][c + 1] == tile and \
+                            self._board[r + 2][c + 2] == tile and \
+                            self._board[r + 3][c + 3] == tile:
                         return True
             return False
 
@@ -95,18 +94,18 @@ class Board(AbstractBoard):
             # Check negatively sloped diaganols
             for c in range(self.column_count - 3):
                 for r in range(3, self.row_count):
-                    if self._board[r][c] == tile.value and \
-                            self._board[r - 1][c + 1] == tile.value and \
-                            self._board[r - 2][c + 2] == tile.value and \
-                            self._board[r - 3][c + 3] == tile.value:
+                    if self._board[r][c] == tile and \
+                            self._board[r - 1][c + 1] == tile and \
+                            self._board[r - 2][c + 2] == tile and \
+                            self._board[r - 3][c + 3] == tile:
                         return True
             return False
 
-        return rows() or cols() or diagonal() or antiDiagonal(), player
+        return rows() or cols() or diagonal() or antiDiagonal()
 
     def is_full(self) -> bool:
         for row in self._board:
-            if row.count(Tile.EMPTY.value) > 0:
+            if row.count(Tile.EMPTY) > 0:
                 return False
         return True
 
@@ -123,7 +122,10 @@ class Board(AbstractBoard):
         notifiyng subscribers
         :return:
         """
-        [modellistener.board_changed() for modellistener in self.__subscribeList]
+        [model_listener.board_changed() for model_listener in self.__subscribeList]
+
+    def __reversed__(self):
+        raise NotImplementedError("Reverse method not implemented yet")
 
     def __iter__(self):
         return self

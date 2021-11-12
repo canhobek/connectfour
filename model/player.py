@@ -5,6 +5,7 @@ class Player:
     def __init__(self, name: str, tile: Tile):
         self._name = name
         self._tile = tile
+        self._score = 0
 
     @property
     def name(self):
@@ -13,6 +14,14 @@ class Player:
     @property
     def tile(self):
         return self._tile
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, score):
+        self._score = score
 
     def __str__(self):
         return f"{self._name} is player with tile {self._tile}."
