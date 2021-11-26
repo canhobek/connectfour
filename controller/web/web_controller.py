@@ -1,14 +1,16 @@
 from model.board import Board
+from model.player import CircularPlayerIterator
 from model.tile import Tile
 
 from flask import Flask, render_template, request, redirect, url_for
 
 
 class WebView(Flask):
-    def __init__(self, board: Board, player):
+    def __init__(self, board: Board, players):
         super(WebView, self).__init__(__name__)
         self._board = board
-        self._player = player
+
+        self._player_iter = CircularPlayerIterator(players)
 
         self.template_folder = "../../view/web/templates"
         self.static_folder = "../../view/web/static"
@@ -23,5 +25,6 @@ class WebView(Flask):
 
     def play(self, column):
         if request.method == "GET":
-            self._board.play(column, tile=Tile.RED)
+            player = next(self._player_iter)
+            self._board.play(column, tile=player.tile)
             return redirect(url_for("display_board"))
